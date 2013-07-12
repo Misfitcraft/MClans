@@ -2,6 +2,8 @@ package me.misfitcraft.mclans;
 
 import java.io.File;
 
+import me.misfitcraft.mclans.commands.MainCommand;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MClans extends JavaPlugin{
@@ -12,6 +14,7 @@ public class MClans extends JavaPlugin{
 	public void onEnable(){
 		checkFiles();
 		loadClans();
+		getCommand("MClans").setExecutor(new MainCommand());
 	}
 
 	private void loadClans(){

@@ -2,4 +2,8 @@ name: MClans
 version: 1
 main: me.misfitcraft.mclans.MClans
 authors: ["tommycake50", "imthadude"]
+depend: [Vault]
+commands:
+    mclans:
+        
 
