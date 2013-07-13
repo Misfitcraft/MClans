@@ -4,6 +4,7 @@ import me.misfitcraft.mclans.MClan;
 import me.misfitcraft.mclans.MClans;
 import me.misfitcraft.mclans.land.MChunk;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
@@ -12,7 +13,7 @@ public class BlockListener implements Listener {
 	public BlockListener(MClans instance){
 		this.instance = instance;
 	}
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreakEvent(BlockBreakEvent e){
 		for(MClan m : instance.clans){
 			for(MChunk c : m.getChunks()){
