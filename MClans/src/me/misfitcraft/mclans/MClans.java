@@ -10,6 +10,7 @@ import java.util.HashMap;
 import me.misfitcraft.mclans.commands.MainCommand;
 import me.misfitcraft.mclans.land.MChunk;
 import me.misfitcraft.mclans.land.Type;
+import me.misfitcraft.mclans.listeners.BlockListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,6 +32,7 @@ public class MClans extends JavaPlugin{
 			e.printStackTrace();
 		}
 		getCommand("MClans").setExecutor(new MainCommand());
+		getServer().getPluginManager().registerEvents(new BlockListener(this), this)
 	}
 
 	private void loadChunks() throws IOException {
