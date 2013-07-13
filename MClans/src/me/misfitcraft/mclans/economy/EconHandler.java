@@ -22,6 +22,13 @@ public class EconHandler{
 	        }
 	        return (econ != null);
 	    }
+	 /**
+	  * Takes an amount of money from a defined player
+	  * @author tommycake50
+	  * @param player
+	  * @param amount
+	  * @return boolean whether the withdrawl was successful 
+	  */
 	 public boolean takeMoneyPlayer(Player p, double amount){
 		 if(econ.hasAccount(p.getName())){
 			 EconomyResponse balance = econ.bankBalance(p.getName());
