@@ -8,24 +8,43 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import me.misfitcraft.mclans.commands.MainCommand;
+import me.misfitcraft.mclans.land.MChunk;
+import me.misfitcraft.mclans.land.Type;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MClans extends JavaPlugin{
 	public File clansfile;
 	public MClan[] clans;
+	private File chunkfile;
 	
 	@Override
 	public void onEnable(){
-		checkFiles();
 		try {
+			checkFiles();
 			loadClans();
+			loadChunks();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		getCommand("MClans").setExecutor(new MainCommand());
+	}
+
+	private void loadChunks() throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(chunkfile));
+		String currline;
+		while((currline = br.readLine()) != null){
+			String[] splitdata = currline.split(",");
+			for(MClan c : clans){
+				if(splitdata[0].equals(c.getName())){
+					c.addChunk(new MChunk(Integer.parseInt(splitdata[1]), Integer.parseInt(splitdata[2]), Type.valueOf(splitdata[3]), getServer().getWorld(splitdata[4])));
+				}
+			}
+		}
+		br.close();
 	}
 
 	/**
@@ -51,12 +70,16 @@ public class MClans extends JavaPlugin{
 		//TODO add functionality to load clans from probably a text file in the clans folder
 	}
 
-	private void checkFiles(){
+	private void checkFiles() throws IOException{
 		//we are gonna have a config at some point
 		saveDefaultConfig();
 		clansfile = new File(getDataFolder(), "Clans");
 		if(!clansfile.exists()){
 			clansfile.mkdir();
+		}
+		chunkfile = new File(getDataFolder(), "chunks.txt");
+		if(!chunkfile.exists()){
+			chunkfile.createNewFile();
 		}
 	}
 }
