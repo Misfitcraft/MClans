@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.misfitcraft.mclans.commands.MainCommand;
+import me.misfitcraft.mclans.economy.EconHandler;
 import me.misfitcraft.mclans.land.MChunk;
 import me.misfitcraft.mclans.listeners.BlockListener;
 import me.misfitcraft.mclans.utils.enums.ChunkType;
@@ -21,9 +22,11 @@ public class MClans extends JavaPlugin{
 	public ArrayList<MClan> clans;
 	private File chunkfile;
 	public FileConfiguration config;
+	private EconHandler econInstance;
 	
 	@Override
 	public void onEnable(){
+		econInstance = new EconHandler(this);
 		try {
 			checkFiles();
 			loadClans();
@@ -83,5 +86,8 @@ public class MClans extends JavaPlugin{
 		if(!chunkfile.exists()){
 			chunkfile.createNewFile();
 		}
+	}
+	public EconHandler getEconInstance(){
+		return econInstance;	
 	}
 }
