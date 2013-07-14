@@ -17,9 +17,9 @@ public class ClanCreation{
 	MClans instance;
 	EconHandler econInstance;
 	
-	public ClanCreation(MClans instance, EconHandler econInstance){
+	public ClanCreation(MClans instance){
 		this.instance = instance;
-		this.econInstance = econInstance;
+		econInstance = instance.getEconInstance();
 	}
 	/**
 	 * creates a new clan
