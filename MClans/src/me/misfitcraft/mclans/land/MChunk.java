@@ -1,6 +1,7 @@
 package me.misfitcraft.mclans.land;
 
 import me.misfitcraft.mclans.MClan;
+import me.misfitcraft.mclans.utils.enums.ChunkType;
 
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
@@ -12,15 +13,15 @@ import org.bukkit.entity.Entity;
 public class MChunk implements Chunk{
 	private int x;
 	private int z;
-	private Type type;
+	private ChunkType ChunkType;
 	private World world;
 	private MClan ownedbyclan;
-	public MChunk(int x, int z, Type type, World world){
+	public MChunk(int x, int z, ChunkType ChunkType, World world){
 		this.x = x;
 		this.z = z;
-		this.type = type;
+		this.ChunkType = ChunkType;
 		this.world = world;
-		if(type.equals(Type.FARMLAND)){
+		if(ChunkType.equals(me.misfitcraft.mclans.utils.enums.ChunkType.FARMLAND)){
 			
 		}
 	}
@@ -91,5 +92,8 @@ public class MChunk implements Chunk{
 	 */
 	public void setClan(MClan ownedbyclan) {
 		this.ownedbyclan = ownedbyclan;
+	}
+	public ChunkType getChunkType(){
+		return ChunkType;
 	}
 }

@@ -5,20 +5,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.misfitcraft.mclans.commands.MainCommand;
 import me.misfitcraft.mclans.land.MChunk;
-import me.misfitcraft.mclans.land.Type;
 import me.misfitcraft.mclans.listeners.BlockListener;
+import me.misfitcraft.mclans.utils.enums.ChunkType;
 
-import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MClans extends JavaPlugin{
 	public File clansfile;
-	public MClan[] clans;
+	public ArrayList<MClan> clans;
 	private File chunkfile;
+	public FileConfiguration config;
 	
 	@Override
 	public void onEnable(){
@@ -32,7 +34,7 @@ public class MClans extends JavaPlugin{
 			e.printStackTrace();
 		}
 		getCommand("MClans").setExecutor(new MainCommand());
-		getServer().getPluginManager().registerEvents(new BlockListener(this), this)
+		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
 	}
 
 	private void loadChunks() throws IOException {
@@ -42,7 +44,7 @@ public class MClans extends JavaPlugin{
 			String[] splitdata = currline.split(",");
 			for(MClan c : clans){
 				if(splitdata[0].equals(c.getName())){
-					c.addChunk(new MChunk(Integer.parseInt(splitdata[1]), Integer.parseInt(splitdata[2]), Type.valueOf(splitdata[3]), getServer().getWorld(splitdata[4])));
+					c.addChunk(new MChunk(Integer.parseInt(splitdata[1]), Integer.parseInt(splitdata[2]), ChunkType.valueOf(splitdata[3]), getServer().getWorld(splitdata[4])));
 				}
 			}
 		}
@@ -56,7 +58,6 @@ public class MClans extends JavaPlugin{
 	 */
 	private void loadClans() throws IOException{
 		//TODO either have the files with no extension or add functionality to .remove() the extensions
-		int i = 0;
 		for(File f : clansfile.listFiles()){
 			HashMap<String, String> membersandranks = new HashMap<String, String>();
 			BufferedReader br = new BufferedReader(new FileReader(f));
@@ -66,15 +67,14 @@ public class MClans extends JavaPlugin{
 				membersandranks.put(values[0], values[1]);
 			}
 			br.close();
-			clans[i] = new MClan(f.getName(), membersandranks);
-			i++;
+			clans.add(new MClan(f.getName(), membersandranks));
 		}
-		//TODO add functionality to load clans from probably a text file in the clans folder
 	}
 
 	private void checkFiles() throws IOException{
 		//we are gonna have a config at some point
 		saveDefaultConfig();
+		config = getConfig();
 		clansfile = new File(getDataFolder(), "Clans");
 		if(!clansfile.exists()){
 			clansfile.mkdir();
