@@ -12,6 +12,7 @@ import me.misfitcraft.mclans.commands.MainCommand;
 import me.misfitcraft.mclans.economy.EconHandler;
 import me.misfitcraft.mclans.land.MChunk;
 import me.misfitcraft.mclans.listeners.BlockListener;
+import me.misfitcraft.mclans.utils.ClanCreation;
 import me.misfitcraft.mclans.utils.enums.ChunkType;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,24 +24,40 @@ public class MClans extends JavaPlugin{
 	private File chunkfile;
 	public FileConfiguration config;
 	private EconHandler econInstance;
+	public HashMap<String, String> invitedPlayers;
+	private File invitedPlayersFile;
+	public ClanCreation clanCreationInstance;
 	
 	@Override
 	public void onEnable(){
 		econInstance = new EconHandler(this);
+		clanCreationInstance = new ClanCreation(this);
 		try {
 			checkFiles();
 			loadClans();
 			loadChunks();
+			loadInvitedPlayers();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		getCommand("MClans").setExecutor(new MainCommand());
+		getCommand("MClans").setExecutor(new MainCommand(clanCreationInstance));
 		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
 	}
 
-	private void loadChunks() throws IOException {
+	private void loadInvitedPlayers() throws IOException{
+		invitedPlayers = new HashMap<String, String>();
+		BufferedReader br = new BufferedReader(new FileReader(invitedPlayersFile));
+		String currline;
+		while((currline = br.readLine()) != null){
+			String[] splitdata = currline.split(",");
+			invitedPlayers.put(splitdata[0], splitdata[1]);
+		}
+		br.close();
+	}
+
+	private void loadChunks() throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(chunkfile));
 		String currline;
 		while((currline = br.readLine()) != null){
@@ -75,7 +92,6 @@ public class MClans extends JavaPlugin{
 	}
 
 	private void checkFiles() throws IOException{
-		//we are gonna have a config at some point
 		saveDefaultConfig();
 		config = getConfig();
 		clansfile = new File(getDataFolder(), "Clans");
@@ -85,6 +101,10 @@ public class MClans extends JavaPlugin{
 		chunkfile = new File(getDataFolder(), "chunks.txt");
 		if(!chunkfile.exists()){
 			chunkfile.createNewFile();
+		}
+		invitedPlayersFile = new File(getDataFolder(), "invitedplayers.txt");
+		if(!invitedPlayersFile.exists()){
+			invitedPlayersFile.createNewFile();
 		}
 	}
 	public EconHandler getEconInstance(){
